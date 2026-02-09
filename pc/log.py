@@ -37,8 +37,8 @@ if __name__ == '__main__':
     readingCount = 0
     with serial.Serial(serial_port()) as ser:
         with open(f"logs/{int(time.time())}.txt", "a") as f:
-            f.write("|Tdelta|415nm|445nm|480nm|515nm|555nm|Clear| NIR |590nm|630nm|680nm|Clear| NIR |\n")
-            print("|Tdelta|415nm|445nm|480nm|515nm|555nm|Clear| NIR |590nm|630nm|680nm|Clear| NIR |")
+            f.write("|sensor|Tdelta|415nm|445nm|480nm|515nm|555nm|Clear| NIR |590nm|630nm|680nm|Clear| NIR |\n")
+            print("|sensor|Tdelta|415nm|445nm|480nm|515nm|555nm|Clear| NIR |590nm|630nm|680nm|Clear| NIR |")
             if LIGHT_ON:
                 ser.write(b" ");
             while True:

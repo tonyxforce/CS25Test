@@ -7,6 +7,8 @@ uint16_t readings[12];
 
 bool ledState = 0;
 
+bool as7341Connected = 0;
+
 void setup()
 {
   // communication with the host computer serial monitor
@@ -30,75 +32,53 @@ void setup()
   else
   {
     Serial.println("Found AS7341!");
-  }
+    as7341Connected = true;
 
-  Serial.println("Setup Atime, ASTEP, Gain");
-  as7341.setATIME(100);
-  as7341.setASTEP(999);
-  as7341.setGain(AS7341_GAIN_256X);
+    Serial.println("Setup Atime, ASTEP, Gain");
+    as7341.setATIME(100);
+    as7341.setASTEP(999);
+    as7341.setGain(AS7341_GAIN_256X);
+  }
 }
 
 unsigned long long lastMillis;
 
 void loop()
 {
-  if(Serial.available() > 0)
+  if (as7341Connected)
   {
-    Serial.read();
-    ledState = !ledState;
-    as7341.enableLED(ledState);
-  }
-  if (as7341.checkReadingProgress())
-  {
-    as7341.getAllChannels(readings); // Calling this any other time may give you old data
 
-    char buf[128];
+    if (Serial.available() > 0)
+    {
+      Serial.read();
+      ledState = !ledState;
+      as7341.enableLED(ledState);
+    }
+    if (as7341.checkReadingProgress())
+    {
+      as7341.getAllChannels(readings); // Calling this any other time may give you old data
 
-    sprintf(buf, "|%06d|%05d|%05d|%05d|%05d|%05d|%05d|%05d|%05d|%05d|%05d|%05d|",
-            millis() - lastMillis,
-            readings[0],
-            readings[1],
-            readings[2],
-            readings[3],
-            readings[4],
-            readings[5],
-            readings[6],
-            readings[7],
-            readings[8],
-            readings[9],
-            readings[10],
-            readings[11]);
+      char buf[128];
 
-    Serial.println(buf);
-    lastMillis = millis();
-    /* Serial.print("|");
-    Serial.print(readings[0]);
-    Serial.print("|");
-    Serial.print(readings[1]);
-    Serial.print("|");
-    Serial.print(readings[2]);
-    Serial.print("|");
-    Serial.print(readings[3]);
-    Serial.print("|");
-    Serial.print(readings[6]);
-    Serial.print("|");
+      sprintf(buf, "as7341|%06d|%05d|%05d|%05d|%05d|%05d|%05d|%05d|%05d|%05d|%05d|%05d|",
+              millis() - lastMillis,
+              readings[0],
+              readings[1],
+              readings[2],
+              readings[3],
+              readings[4],
+              readings[5],
+              readings[6],
+              readings[7],
+              readings[8],
+              readings[9],
+              readings[10],
+              readings[11]);
 
-    // we skip the first set of duplicate clear/NIR readings
-    Serial.print(readings[4]);
-    Serial.print("|");
-    Serial.print(readings[5]);
-    Serial.print("|");
+      Serial.println(buf);
+      lastMillis = millis();
 
-    Serial.print(readings[7]);
-    Serial.print("|");
-    Serial.print(readings[8]);
-    Serial.print("|");
-    Serial.print(readings[9]);
-    Serial.print("|");
-    Serial.print(readings[10]);
-    Serial.print("|");
-    Serial.println(readings[11]); */
-
-    as7341.startReading();
+      as7341.startReading();
+    }
   }
 }
