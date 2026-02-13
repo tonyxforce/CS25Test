@@ -3,15 +3,9 @@ import glob
 import serial
 import time
 
+import turtle
 
 def serial_port():
-    """ Lists serial port names
-
-        :raises EnvironmentError:
-            On unsupported or unknown platforms
-        :returns:
-            A list of the serial ports available on the system
-    """
     if sys.platform.startswith('win'):
         ports = ['COM%s' % (i + 1) for i in range(256)]
     elif sys.platform.startswith('linux') or sys.platform.startswith('cygwin'):
@@ -32,22 +26,10 @@ def serial_port():
 
 
 if __name__ == '__main__':
-    LIGHT_ON = True
-    
-    readingCount = 0
     with serial.Serial(serial_port()) as ser:
-        with open(f"logs/{int(time.time())}.txt", "a") as f:
-            f.write("|sensor|Tdelta|415nm|445nm|480nm|515nm|555nm|Clear| NIR |590nm|630nm|680nm|Clear| NIR |\n")
-            print("|sensor|Tdelta|415nm|445nm|480nm|515nm|555nm|Clear| NIR |590nm|630nm|680nm|Clear| NIR |")
-            if LIGHT_ON:
-                ser.write(b" ");
+        with open(f"logs/AS/{time.time()}.txt", "a") as f:
             while True:
                 line = ser.readline().decode('utf-8').strip()
-                readingCount+=1
-                f.write(line + "\n")
+
                 print(line)
-                f.write(line.replace("\r", "") + "\n")
-                if(readingCount >= 50):
-                    break;
-            if LIGHT_ON:
-                ser.write(b" ");
+                f.write(line + "\n")

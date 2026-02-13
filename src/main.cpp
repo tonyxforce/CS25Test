@@ -3,11 +3,18 @@
 #include <Wire.h>
 Adafruit_AS7341 as7341;
 
+#include <Adafruit_AMG88xx.h>
+
+Adafruit_AMG88xx amg;
+
+float pixels[AMG88xx_PIXEL_ARRAY_SIZE];
+
 uint16_t readings[12];
 
 bool ledState = 0;
 
 bool as7341Connected = 0;
+bool amg88xxConnected = 0;
 
 void setup()
 {
@@ -34,17 +41,35 @@ void setup()
     Serial.println("Found AS7341!");
     as7341Connected = true;
 
-    Serial.println("Setup Atime, ASTEP, Gain");
     as7341.setATIME(100);
     as7341.setASTEP(999);
     as7341.setGain(AS7341_GAIN_256X);
   }
+
+    if (!amg.begin(105U, &Wire1)) {
+        Serial.println("Could not find a valid AMG88xx sensor, check wiring!");
+    }else{
+        Serial.println("Found AMG88xx sensor!");
+        amg88xxConnected = true;
+    }
 }
 
 unsigned long long lastMillis;
 
 void loop()
 {
+  if(amg88xxConnected)
+  {
+    amg.readPixels(pixels);
+    Serial.print("|STAR|");
+    for (int i = 0; i < AMG88xx_PIXEL_ARRAY_SIZE; i++)
+    {
+      Serial.print(pixels[i]);
+      Serial.print("|");
+    }
+    Serial.println("END|");
+  }
+
   if (as7341Connected)
   {
 
