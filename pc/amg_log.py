@@ -126,7 +126,7 @@ if __name__ == '__main__':
                 def divideBySmallest(inpt):
                     return inpt / max(values)
                 
-                if(len(values)< 3): continue
+                if(len(values) < 3): continue
 
                 #values = list(map(divideBySmallest, values))
 
@@ -135,6 +135,15 @@ if __name__ == '__main__':
                     for value in row[::-1]:
                         setColorRGB(convert_K_to_RGB((value)*200))
                         t.begin_fill()
+                        t.left(90)
+                        t.forward(PIXELSIZE/2)
+                        t.right(90)
+                        t.forward(PIXELSIZE/2)
+                        t.write(value);
+                        t.backward(PIXELSIZE/2)
+                        t.left(90)
+                        t.backward(PIXELSIZE/2)
+                        t.right(90)
                         for i in range(4):
                             t.forward(PIXELSIZE)
                             t.left(90)
@@ -145,4 +154,4 @@ if __name__ == '__main__':
                     t.forward(PIXELSIZE)
                     t.left(90)
                 turtle.update()
-                turtle.clear()
+                t.clear()
