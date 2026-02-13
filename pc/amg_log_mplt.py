@@ -90,12 +90,6 @@ def leftPad(s):
         s = "0" + s
     return s
 
-def setColorRGB(color):
-    r,g,b = color
-    t.fillcolor("#"+
-                leftPad(hex(int(r))[2:])
-                +leftPad(hex(int(g))[2:])
-                +leftPad(hex(int(b))[2:]))
 
 def chunks(xs, n):
     n = max(1, n)
